@@ -1,13 +1,36 @@
 {% extends '_base.html' %}
-{% load crispy_forms_tags %}
+{% load static %}
 
 {% block title %}Sign up{% endblock %}
+{% block css %}
+<link rel="stylesheet" href="{% static 'css/style.css' %}">
+{% endblock %}
 
 {% block content %}
-<h2>Sign up</h2>
-<form method="post">
-  {% csrf_token %}
-  {{ form|crispy }}
-  <button class="btn btn-success" type="submit">Sign up</button>
-</form>
+<div class="container">
+  <h2>Sign up</h2>
+  <form method="post" id="welcome-form">
+    {% csrf_token %}
+    {% for field in form %}
+    <div class="input-component">
+
+      <input type="text" id="id_login" class="input-component_field">
+      <label for="id_login">{{field.label}}</label>
+      <span class='error'>This field cannot be empty</span>
+    </div>
+    {% endfor %}
+    <button class="welcome-form_button" type="submit">Sign up</button>
+  </form>
+</div>
 {% endblock content %}
+
+
+{% block javascript %}
+<script>
+  const formElement = document.querySelector("#welcome-form");
+
+  formElement.addEventListener('submit', e => {
+    e.preventDefault()
+  })
+</script>
+{% endblock javascript%}

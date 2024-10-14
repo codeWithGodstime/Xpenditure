@@ -1,0 +1,52 @@
+{% extends "_base.html" %}
+{% load static %}
+{% block css %}
+
+  <link rel="stylesheet" href="{% static 'css/style.css' %}">
+  {% endblock %}
+
+{% block content %}
+{% if not user.is_authenticated %}
+    {% include 'includes/auth_home.html' %}
+{% else %}
+    {% include 'includes/landing.html' %}
+{% endif %}
+
+<script>
+
+    const formElement = document.querySelector("#welcome-form");
+    const formInputFieldElements = document.querySelectorAll(".input-component_field");
+    let validCount = 0
+
+    const is_valid = (field) => {
+        return field.value.trim() != ""
+    }
+
+    formElement.addEventListener('submit', e => {
+        e.preventDefault()
+
+        // get all form fields
+        formInputFieldElements.forEach(field => {
+            validity = is_valid(field)
+
+            parentOfField = field.parentElement
+            errElement = parentOfField.querySelector('.error')
+            // check of the error child in the parent
+            if (!validity) {
+                // create error element
+                errElement.style.display = "inline-block"
+                // return
+            }else {
+                errElement.style.display = "none"
+                validCount++
+            }
+        })
+        console.log(validCount)
+        if (validCount == 4) {
+            console.log("submit")
+            // formElement.submit()
+        }
+    })
+</script>
+
+{% endblock %}

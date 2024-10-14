@@ -1,0 +1,253 @@
+{% extends "_base.html" %}
+{% load static %}
+{% load currency_filter %}
+{% block css %}
+
+<link rel="stylesheet" href="{% static 'css/dashboard.css' %}">
+{% endblock %}
+
+{% block content %}
+
+<div class="wrapper">
+    <!-- image -->
+    <div class="expenses">
+
+        <!-- filter section -->
+        <section class="filter-container">
+            <p class="text-yellow">Description</p>
+
+            <!-- filter -->
+            <div class="filter-div">
+                <p>Filter Expenses</p>
+
+                <button class="text-yellow">
+                    All
+                    <img src="" alt="">
+                </button>
+            </div>
+
+        </section>
+
+        <!-- expenses -->
+
+        {% if expenses %}
+        <div class="expenses-list">
+            {% for expense in expenses %}
+            <div class="single-expense">
+                <img src="" alt="">
+                <div>
+                    <p>{{expense.description}}</p>
+                    <small>Date: <span>{{expense.created_at}}</span></small>
+                </div>
+                <!-- amount -->
+                <div class="expense-amount">
+                    {{expense.amount|currency}}
+                </div>
+
+                <!-- hiddle edit/delete button -->
+                <div class="op-btns">
+                    hello
+                </div>
+            </div>
+            {% endfor %}
+
+        </div>
+        {% else %}
+
+        <!-- expenses if user has -->
+        <section
+            style="text-align: center; text-transform: capitalize; display: flex; flex-direction: column; align-items: center; justify-content: center;">
+            <p style="font-size: 3em; font-weight: bold;">Look like you haven't added any <span
+                    style="color: var(--green);">expenses yet.</span></p>
+            <p>No worries, just hit the <span style="color: var(--green);">'New Expense'</span> button to get started
+            </p>
+        </section>
+        {% endif %}
+    </div>
+    <!-- calculation -->
+    <div class="container">
+        <div class="heading">
+            <h2>Calculation</h2>
+        </div>
+
+        <!-- income -->
+        <div class="container-white">
+            <span style="text-transform: uppercase; font-weight: bold;">Income</span>
+            <span class="amount">{{income|currency}}</span>
+        </div>
+
+        <!-- graph -->
+        <canvas id="graph"></canvas>
+
+        <!-- stats -->
+        <div class="stats-container">
+            <div class="stats stats_green">
+                <h3>Available</h3>
+                <span class="amount">{{available_amount|currency}}</span>
+            </div>
+
+            <div class="stats stats_yellow">
+                <h3>Spent</h3>
+                <span class="amount">{{spent_amount|currency}}</span>
+            </div>
+
+        </div>
+
+        <button class="btn-yellow">Reset Expenses</button>
+
+    </div>
+    <!-- optionals -->
+    <div class="container">
+        <div class="heading">
+            <h2>Optionals</h2>
+        </div>
+
+        <!-- income -->
+        <div class="container-white">
+            <p style="text-transform: uppercase; font-weight: bold;">Choose any fix expenses</p>
+
+            <div class="fix-expenses">
+                <!-- single fix expense -->
+                <div class="single-fix-expense">
+                    <div>
+                        <img src="" alt="">
+                        <p>Netflix</p>
+                    </div>
+
+                    <button>select</button>
+                </div>
+            </div>
+
+        </div>
+    </div>
+</div>
+
+
+<!-- new expense modal -->
+<div class="modal">
+
+    <!-- close button -->
+    <!-- form -->
+    <form action="{% url 'expense_create' %}" method="post" id="welcome-form">
+
+        <div class="input-component">
+
+            <input type="text" id="id_description" name="description" class="input-component_field">
+            <label for="id_description">Expense Description</label>
+            <span class='error'>This field cannot be empty</span>
+        </div>
+
+        <div class="input-component">
+            <!-- <input type="text" id="id_category" name="category" class="input-component_field"> -->
+            <div class="select-field">
+                <select class="input-component_field" name="category" id="id_category">
+                    <option value=""></option>
+                     {% for category in categories %}
+                        <option value="{{category.id}}">{{category.name}}</option>
+                     {% endfor %}
+                </select>
+                <label for="id_category">Choose Expense Category </label>
+            </div>
+            <span class='error'>This field cannot be empty</span>
+        </div>
+
+        <div class="input-component">
+            <input type="text" id="id_amount" name="amount" class="input-component_field">
+            <label for="id_amount">Enter Amount Spent</label>
+            <span class='error'>This field cannot be empty</span>
+        </div>
+
+        <button type="submit" class="welcome-form_button">Add Expense</button>
+    </form>
+</div>
+
+<script>
+
+    function getCookie(name) {
+        let cookieValue = null;
+        if (document.cookie && document.cookie !== '') {
+            const cookies = document.cookie.split(';');
+            for (let i = 0; i < cookies.length; i++) {
+                const cookie = cookies[i].trim();
+                if (cookie.substring(0, name.length + 1) === (name + '=')) {
+                    cookieValue = decodeURIComponent(cookie.substring(name.length + 1));
+                    break;
+                }
+            }
+        }
+        return cookieValue;
+    }
+
+    const csrfToken = getCookie('csrftoken');  // Get CSRF token from cookies
+
+    const formElement = document.querySelector("#welcome-form");
+    const formInputFieldElements = document.querySelectorAll(".input-component_field");
+    const modalElement = document.querySelector(".modal");
+    let validCount = 0
+
+    const is_valid = (field) => {
+        return field.value.trim() != ""
+    }
+
+    // add event to the esc key to close new expense modal
+    document.addEventListener("keydown", e => {
+        if (e.key.toLowerCase() == 'escape') {
+            modalElement.style.display = 'none'
+        }
+    })
+
+    // add expense
+    document.querySelector("#add-expense").addEventListener("click", e => {
+        modalElement.style.display = 'block' // display the model
+    })
+
+    formElement.addEventListener('submit', e => {
+        e.preventDefault()
+
+        // get all form fields
+        // formInputFieldElements.forEach(field => {
+        //     validity = is_valid(field)
+
+        //     parentOfField = field.parentElement
+        //     errElement = parentOfField.querySelector('.error')
+        //     // check of the error child in the parent
+        //     if (!validity) {
+        //         // create error element
+        //         errElement.style.display = "inline-block"
+        //         // return
+        //     } else {
+        //         errElement.style.display = "none"
+        //         validCount++
+        //     }
+        // })
+
+        const expenseFormData = new FormData(formElement)
+
+        async function submitForm() {
+
+            const response = await fetch(
+                "/expense/",
+                {
+                    method: "POST",
+                    body: JSON.stringify({
+                        "category": "856d03b6-d357-470e-8149-763959256043",
+                        "amount": "1000",
+                        "description": "hello habibi"
+                    }),
+                    headers: {
+                        "Content-Type": "application/json",
+                        "X-CSRFToken": csrfToken
+                    }
+                }
+
+            );
+            const data = await response.json()
+            console.log(data)
+
+        }
+
+        submitForm()
+    })
+</script>
+
+{% endblock %}
