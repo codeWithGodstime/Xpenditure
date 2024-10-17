@@ -11,9 +11,6 @@ DEBUG = config("DEBUG", cast=bool, default=True)
 ALLOWED_HOSTS = config("ALLOWED_HOSTS", default='localhost').split(",")
 
 
-# https://docs.djangoproject.com/en/dev/ref/settings/#allowed-hosts
-ALLOWED_HOSTS = ["localhost", "0.0.0.0", "127.0.0.1"]
-
 INSTALLED_APPS = [
     "django.contrib.admin",
     "django.contrib.auth",
