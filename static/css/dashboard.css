@@ -257,7 +257,7 @@ button:focus {
     }
 
     .expense-amount {
-        font-size: clamp(1em, 4vw, 4em);
+        font-size: clamp(1em, 4vw, 3em);
     }
 }
 
@@ -288,6 +288,7 @@ button:focus {
     background-color: #1e1e1ee8;
     z-index: 999;
     transition: display 4s ease;
+    display: none;
     /*NOT WORKING*/
 
 
@@ -393,3 +394,60 @@ button:focus {
         padding: .5em;
     }
 }
+
+
+/* Modal container (hidden by default) */
+/* .modal {
+    display: none;
+    position: fixed;
+    z-index: 1;
+    left: 0;
+    top: 0;
+    width: 100%;
+    height: 100%;
+    background-color: rgba(0, 0, 0, 0.5);
+  } */
+  
+  /* Modal content box */
+  .modal-content {
+    background-color: white;
+    margin: 15% auto;
+    padding: 20px;
+    border: 1px solid #888;
+    width: 300px;
+    text-align: center;
+  }
+  
+  /* Close button (X) */
+  .close {
+    position: absolute;
+    right: 10px;
+    top: 10px;
+    font-size: 20px;
+    cursor: pointer;
+  }
+  
+  /* Modal action buttons */
+  .modal-actions {
+    display: flex;
+    justify-content: space-around;
+    margin-top: 20px;
+  }
+  
+  /* Button styles */
+  .btn {
+    padding: 10px 20px;
+    border: none;
+    background-color: #008cba;
+    color: white;
+    cursor: pointer;
+  }
+  
+  .btn-danger {
+    background-color: red;
+  }
+  
+  .btn:hover {
+    background-color: #005f87;
+  }
+  

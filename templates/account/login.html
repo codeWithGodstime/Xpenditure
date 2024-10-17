@@ -9,7 +9,7 @@
 {% block content %}
 <div class="container">
   <h2>Log in</h2>
-  <form method="post" id="welcome-form">
+  <form action="" method="post" id="welcome-form">
     {% csrf_token %}
     {% for field in form %}
     <div class="input-component">
@@ -29,8 +29,8 @@
 <script>
   const formElement = document.querySelector("#welcome-form");
 
-  formElement.addEventListener('submit', e=> {
-    e.preventDefault()
-  })
+  // formElement.addEventListener('submit', e=> {
+  //   e.preventDefault()
+  // })
 </script>
 {% endblock javascript%}

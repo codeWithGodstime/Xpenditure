@@ -22,7 +22,7 @@ class Category(BaseModelMixin):
     
 
 class Income(BaseModelMixin):
-    amount = models.DecimalField(max_digits=16, decimal_places=2)
+    amount = models.DecimalField(max_digits=16, decimal_places=2, default=0.00)
     user = models.ForeignKey(User, on_delete=models.CASCADE)
 
     @classmethod
@@ -36,8 +36,16 @@ class Expense(BaseModelMixin):
     is_fixed = models.BooleanField(default=False)
     user = models.ForeignKey(User, on_delete=models.CASCADE)
     category = models.ForeignKey(Category, on_delete=models.CASCADE)
-    amount = models.DecimalField(max_digits=16, decimal_places=2)
+    amount = models.DecimalField(max_digits=16, decimal_places=2, default=0.00)
 
+    def serialized_fields(self):
+        return {
+            "description": self.description,
+            "is_fixed": self.is_fixed,
+            "user": self.user.username,
+            "category": self.category.name,
+            "amount": float(self.amount)
+        }
 
     def __str__(self):
         return self.description[:30]
@@ -49,7 +57,7 @@ class Goal(BaseModelMixin):
         ("ACTIVE", "ACTIVE")
     )
 
-    estimated_amount = models.DecimalField(max_digits=16, null=True, blank=True, decimal_places=2)
+    estimated_amount = models.DecimalField(max_digits=16, null=True, blank=True, decimal_places=2, default=0.00)
     status = models.CharField(max_length=20, choices=STATUS, default="ACTIVE")
     description = models.TextField()
     user = models.ForeignKey(User, on_delete=models.CASCADE)
