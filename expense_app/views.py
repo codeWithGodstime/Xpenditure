@@ -1,17 +1,19 @@
 import json
 from django.views.generic import TemplateView, View
 from django.views.generic.edit import FormMixin
-from django.contrib.auth.mixins import LoginRequiredMixin
+from django.contrib.auth.mixins import LoginRequiredMixin, UserPassesTestMixin
 from django.http import JsonResponse
-from django.shortcuts import render
+from django.shortcuts import redirect
 from django.db.models import Sum
 
 from datetime import datetime
 from django.utils.timezone import make_aware
 from django.db.models import Q
+from django.urls import reverse
 
 from .models import User, Income, Expense, Goal, Category
 from .forms import ExpenseCreateForm
+
 
 class HomePageView(TemplateView):
     template_name = "expense/index.html"
@@ -27,7 +29,7 @@ class DashboardView(LoginRequiredMixin, TemplateView):
         total_expenses = all_user_expenses.aggregate(Sum('amount'))['amount__sum'] or 0.00
         categories = Category.objects.all().distinct()
         income = Income.current_income(self.request.user)
-        print(income)
+
         # expense creation form
         expense_creation_form = ExpenseCreateForm()
 
