@@ -14,7 +14,7 @@
     {% for field in form %}
     <div class="input-component">
 
-      <input type="text" id="id_login" class="input-component_field">
+      <input type="text" id="id_login" name="{{ field.html_name }}" class="input-component_field">
       <label for="id_login">{{field.label}}</label>
       <span class='error'>This field cannot be empty</span>
     </div>

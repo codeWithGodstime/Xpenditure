@@ -28,6 +28,7 @@ class Income(BaseModelMixin):
     @classmethod
     def current_income(cls, user):
         """return the current income for the user"""
+        print(cls.objects.filter(user=user).order_by("-created_at").first())
         return cls.objects.filter(user=user).order_by("-created_at").first()
 
 

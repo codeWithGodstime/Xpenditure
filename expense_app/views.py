@@ -27,7 +27,7 @@ class DashboardView(LoginRequiredMixin, TemplateView):
         total_expenses = all_user_expenses.aggregate(Sum('amount'))['amount__sum'] or 0.00
         categories = Category.objects.all().distinct()
         income = Income.current_income(self.request.user)
-
+        print(income)
         # expense creation form
         expense_creation_form = ExpenseCreateForm()
 
@@ -85,6 +85,7 @@ class ExpenseCreateView(LoginRequiredMixin, View):
             return JsonResponse({"message": "Expense has been added successfully", "data": json.dumps(dashboard_data)}, status=201)
 
         return JsonResponse({"error": form.errors})
+
 
 class ExpenseUpdateView(LoginRequiredMixin, View):
     pass

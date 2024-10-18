@@ -77,7 +77,7 @@
         </div>
 
         <!-- graph -->
-        <canvas id="graph"></canvas>
+        <div id="graph"></div>
 
         <!-- stats -->
         <div class="stats-container">
@@ -164,16 +164,39 @@
 <!-- reset Modal Structure -->
 <div id="resetModal" class="modal">
     <div class="modal-content">
-      <span class="close">&times;</span>
-      <h2>Confirm Reset</h2>
-      <p>Are you sure you want to reset all your expenses?</p>
-      <div class="modal-actions">
-        <button id="cancel-btn" class="btn">Cancel</button>
-        <button id="confirm-reset-btn" class="btn btn-danger">Yes, Reset</button>
-      </div>
+        <span class="close">&times;</span>
+        <h2>Confirm Reset</h2>
+        <p>Are you sure you want to reset all your expenses?</p>
+        <div class="modal-actions">
+            <button id="cancel-btn" class="btn">Cancel</button>
+            <button id="confirm-reset-btn" class="btn btn-danger">Yes, Reset</button>
+        </div>
     </div>
-  </div>
+</div>
 
+
+<!-- <script src="{% static 'js/chart.js' %}"></script> -->
+<script src="https://cdn.jsdelivr.net/npm/apexcharts"></script>
+<script>
+    var options = {
+        chart: {
+            type: 'donut'
+        },
+        dataLabels: {
+            style: {
+                colors: ['#F44336', '#E91E63', '#9C27B0']
+            }
+        },
+        series: [44, 55],
+        labels: ['Income', 'Expense']
+
+    }
+
+    var chart = new ApexCharts(document.querySelector("#graph"), options);
+
+    chart.render();
+
+</script>
 <script>
 
     function getCookie(name) {

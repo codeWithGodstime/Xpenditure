@@ -7,7 +7,7 @@ BASE_DIR = Path(__file__).resolve().parent.parent
 SECRET_KEY = config("SECRET_KEY", default="django-insecure-0peo@#x9jur3!h$ryje!$879xww8y1y66jx!%*#ymhg&jkozs2")
 
 DEBUG = config("DEBUG", cast=bool, default=True)
-# DEBUG=False
+# DEBUG=True
 
 ALLOWED_HOSTS = config("ALLOWED_HOSTS", default='localhost').split(",")
 
@@ -191,7 +191,7 @@ ACCOUNT_EMAIL_REQUIRED = True
 ACCOUNT_UNIQUE_EMAIL = True
 
 
-if not DEBUG:
-    SECURE_SSL_REDIRECT=True
-    SESSION_COOKIE_SECURE=True
-    CSRF_COOKIE_SECURE=True
+# if not DEBUG:
+#     SECURE_SSL_REDIRECT=True
+#     SESSION_COOKIE_SECURE=True
+#     CSRF_COOKIE_SECURE=True
