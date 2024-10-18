@@ -185,5 +185,12 @@ a{
     .container{
         padding: .5em;
     }
+
+    .navigation-container {
+        justify-content: center;
+        flex-direction: column;
+    }
+
+
 }
 
