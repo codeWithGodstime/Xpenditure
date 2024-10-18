@@ -9,8 +9,8 @@ SECRET_KEY = config("SECRET_KEY", default="django-insecure-0peo@#x9jur3!h$ryje!$
 DEBUG = config("DEBUG", cast=bool, default=True)
 # DEBUG=True
 
-ALLOWED_HOSTS = config("ALLOWED_HOSTS", default='localhost').split(",")
-
+ALLOWED_HOSTS = list(config("ALLOWED_HOSTS", default='localhost').split(","))
+print(ALLOWED_HOSTS)
 
 INSTALLED_APPS = [
     "django.contrib.admin",
@@ -83,19 +83,6 @@ else:
             conn_health_checks=True,
         )
     }
-
-
-# For Docker/PostgreSQL usage uncomment this and comment the DATABASES config above
-# DATABASES = {
-#     "default": {
-#         "ENGINE": "django.db.backends.postgresql",
-#         "NAME": "postgres",
-#         "USER": "postgres",
-#         "PASSWORD": "postgres",
-#         "HOST": "db",  # set in docker-compose.yml
-#         "PORT": 5432,  # default postgres port
-#     }
-# }
 
 # Password validation
 # https://docs.djangoproject.com/en/dev/ref/settings/#auth-password-validators
@@ -191,7 +178,7 @@ ACCOUNT_EMAIL_REQUIRED = True
 ACCOUNT_UNIQUE_EMAIL = True
 
 
-# if not DEBUG:
-#     SECURE_SSL_REDIRECT=True
-#     SESSION_COOKIE_SECURE=True
-#     CSRF_COOKIE_SECURE=True
+if not DEBUG:
+    SECURE_SSL_REDIRECT=True
+    SESSION_COOKIE_SECURE=True
+    CSRF_COOKIE_SECURE=True
