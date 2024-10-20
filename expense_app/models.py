@@ -20,15 +20,16 @@ class Category(BaseModelMixin):
     def __str__(self):
         return self.name
     
-
 class Income(BaseModelMixin):
-    amount = models.DecimalField(max_digits=16, decimal_places=2, default=0.00)
+    amount = models.FloatField(default=0.00)
     user = models.ForeignKey(User, on_delete=models.CASCADE)
+
+    class Meta:
+        ordering = ("-created_at",)
 
     @classmethod
     def current_income(cls, user):
         """return the current income for the user"""
-        print(cls.objects.filter(user=user).order_by("-created_at").first())
         return cls.objects.filter(user=user).order_by("-created_at").first()
 
 

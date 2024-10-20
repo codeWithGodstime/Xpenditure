@@ -9,4 +9,3 @@ def create_default_income_for_user(sender, instance, created, **kwargs):
     if created:
         income = Income.objects.create(user=instance)
         income.save()
-        print("Income created")

@@ -128,10 +128,26 @@ button:focus {
             margin-top: 2em;
             display: flex;
             flex-direction: column;
+            /* min-height: 100%; */
             gap: 1em;
             justify-content: center;
             align-items: center;
             box-shadow: 0px 2px 15px 1px var(--graph-30);
+        }
+
+        .fix-container{
+            flex-grow: 2;
+            justify-content: space-between;
+        }
+
+        /* fix expnses */
+        .fix-expenses{
+            flex-grow: 2;
+            width: 100%;
+        }
+
+        .goals{
+            flex-grow: 1;
         }
     }
 
@@ -229,10 +245,24 @@ button:focus {
     justify-content: space-between;
     gap: 1em;
     align-items: center;
+    padding: 1.5rem 0;
+
+    div{
+        display: inherit;
+        align-items: center;
+        gap: 1em;
+    }
+
+    p{
+        font-weight: bold;
+        font-size: clamp(1rem, 50%, 3rem);
+    }
 
     button {
         background-color: var(--green);
         border-radius: 999px;
+        justify-self: flex-end;
+        padding: .22em 1.5em; 
     }
 }
 

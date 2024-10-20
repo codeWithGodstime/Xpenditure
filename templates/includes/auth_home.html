@@ -9,25 +9,26 @@
 
         <!-- form -->
         <form action="" method="post" id="welcome-form">
+            {% csrf_token %}
             <div class="input-component">
 
-                <input type="text" id="income" class="input-component_field">
+                <input type="text" id="income" name="amount" class="input-component_field">
                 <label for="income">Insert your Income</label>
                 <span class='error'>This field cannot be empty</span>
             </div>
 
             <div class="input-component">
-                <input type="text" id="username" class="input-component_field">
-                <label for="username">Insert your Name</label>
-                <span class='error'>This field cannot be empty</span>
-            </div>
-
-            <div class="input-component">
-                <input type="text" id="goal" class="input-component_field">
+                <input type="text" id="goal" name="description" class="input-component_field">
                 <label for="goal">Insert your Goal</label>
                 <span class='error'>This field cannot be empty</span>
             </div>
 
+            <div class="input-component">
+                <input type="text" id="estimated_amount" name="estimated_amount" class="input-component_field">
+                <label for="estimated_amount">Insert Estimated amount to acheive your goal</label>
+                <span class='error'>This field cannot be empty</span>
+            </div>
+            
             <button type="submit" class="welcome-form_button">Start your Calculation</button>
         </form>
     </div>

@@ -1,6 +1,7 @@
 {% extends "_base.html" %}
 {% load static %}
 {% load currency_filter %}
+{% load dashboard_context %}
 {% block css %}
 
 <link rel="stylesheet" href="{% static 'css/dashboard.css' %}">
@@ -103,21 +104,27 @@
         </div>
 
         <!-- income -->
-        <div class="container-white">
+        <div class="container-white fix-container">
             <p style="text-transform: uppercase; font-weight: bold;">Choose any fix expenses</p>
 
             <div class="fix-expenses">
                 <!-- single fix expense -->
+                {% fixed_expenses as expenses %}
+                {% for expense in expenses %}
                 <div class="single-fix-expense">
-                    <div>
-                        <img src="" alt="">
-                        <p>Netflix</p>
+                    <div >
+                        <img src="{{imageUrl}}" alt="{{expense.name}}">
+                        <p>{{expense.name}}</p>
                     </div>
 
                     <button>select</button>
                 </div>
+                {% endfor %}
             </div>
+        </div>
 
+        <div class="goals">
+            Goals
         </div>
     </div>
 </div>

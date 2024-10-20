@@ -1,26 +1,75 @@
 import json
+from decimal import Decimal
 from django.views.generic import TemplateView, View
-from django.views.generic.edit import FormMixin
-from django.contrib.auth.mixins import LoginRequiredMixin, UserPassesTestMixin
+from django.core.exceptions import ValidationError
+from django.contrib.auth.mixins import LoginRequiredMixin
 from django.http import JsonResponse
 from django.shortcuts import redirect
 from django.db.models import Sum
 
 from datetime import datetime
 from django.utils.timezone import make_aware
-from django.db.models import Q
-from django.urls import reverse
+from django.db import transaction
+from django.urls import reverse, reverse_lazy
 
 from .models import User, Income, Expense, Goal, Category
-from .forms import ExpenseCreateForm
+from .forms import ExpenseCreateForm, IncomeForm, GoalForm
 
 
 class HomePageView(TemplateView):
     template_name = "expense/index.html"
 
+    def get(self, request, *args, **kwargs):
+        # check if user has income
+        if request.user.has_income:
+            return redirect(reverse("dashboard"))
+        return super().get(request, *args, **kwargs)
+
+    
+    @transaction.atomic
+    def post(self, request, *args, **kwargs):
+        # Wrap in a try-except block to handle potential errors
+        data = request.POST.copy()
+        amount = data.pop("amount")
+        
+        try:
+            decimal_amount = float(amount[0])
+            # Validate form inputs
+            income_form = IncomeForm({"amount": decimal_amount})
+            goal_form = GoalForm(request.POST)
+        
+            if income_form.is_valid() and goal_form.is_valid():
+                # Create income and goal within the atomic transaction
+                income = income_form.save(commit=False)
+                income.user = request.user
+                income.save()
+
+                goal = goal_form.save(commit=False)
+                goal.user = request.user
+                goal.save()
+
+                # Redirect to the dashboard
+                return redirect(reverse_lazy("dashboard"))
+            else:
+                # If validation fails, handle it
+                return self.form_invalid(income_form, goal_form)
+
+        except ValidationError as e:
+            transaction.set_rollback(True)  # Explicitly rollback on error
+            return self.form_invalid(income_form, goal_form)
+
+    def form_invalid(self, income_form, goal_form):
+        # Handle the case where the form is invalid, perhaps re-render the form with errors
+        context = self.get_context_data(income_form=income_form, goal_form=goal_form)
+        return self.render_to_response(context)
 
 class DashboardView(LoginRequiredMixin, TemplateView):
     template_name = "expense/dashboard.html"
+
+    def get(self, request, *args, **kwargs):
+        if not request.user.has_income:
+            return redirect(reverse("home"))
+        return super().get(request, *args, **kwargs)
 
     def get_context_data(self, *args, **kwargs):
         # random goal
