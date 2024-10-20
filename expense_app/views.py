@@ -21,8 +21,9 @@ class HomePageView(TemplateView):
 
     def get(self, request, *args, **kwargs):
         # check if user has income
-        if request.user.has_income:
-            return redirect(reverse("dashboard"))
+        if request.user.is_authenticated:
+            if request.user.has_income:
+                return redirect(reverse("dashboard"))   
         return super().get(request, *args, **kwargs)
 
     

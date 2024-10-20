@@ -112,12 +112,12 @@
                 {% fixed_expenses as expenses %}
                 {% for expense in expenses %}
                 <div class="single-fix-expense">
-                    <div >
+                    <div>
                         <img src="{{imageUrl}}" alt="{{expense.name}}">
                         <p>{{expense.name}}</p>
                     </div>
 
-                    <button>select</button>
+                    <button onclick="handleClick('{{ expense.name }}')">select</button>
                 </div>
                 {% endfor %}
             </div>
@@ -184,7 +184,9 @@
 
 <!-- <script src="{% static 'js/chart.js' %}"></script> -->
 <script src="https://cdn.jsdelivr.net/npm/apexcharts"></script>
+
 <script>
+
     var options = {
         chart: {
             type: 'donut'
@@ -202,9 +204,6 @@
     var chart = new ApexCharts(document.querySelector("#graph"), options);
 
     chart.render();
-
-</script>
-<script>
 
     function getCookie(name) {
         let cookieValue = null;
@@ -239,6 +238,12 @@
         }
     })
 
+    const handleClick = (description) => {
+        // this function will come use click on the fix expenses select button
+        document.querySelector("#id_description").value = description
+        modalElement.style.display = 'block' // display the model
+    }
+
     // add expense
     document.querySelector("#add-expense").addEventListener("click", e => {
         modalElement.style.display = 'block' // display the model
@@ -246,25 +251,6 @@
 
     formElement.addEventListener('submit', e => {
         e.preventDefault()
-
-        // get all form fields
-        // formInputFieldElements.forEach(field => {
-        //     validity = is_valid(field)
-
-        //     parentOfField = field.parentElement
-        //     errElement = parentOfField.querySelector('.error')
-        //     // check of the error child in the parent
-        //     if (!validity) {
-        //         // create error element
-        //         errElement.style.display = "inline-block"
-        //         // return
-        //     } else {
-        //         errElement.style.display = "none"
-        //         validCount++
-        //     }
-        // })
-
-        const expenseFormData = new FormData(formElement)
 
         async function submitForm() {
 
@@ -282,11 +268,9 @@
                         "X-CSRFToken": csrfToken
                     }
                 }
-
             );
             const data = await response.json()
             console.log(data)
-
         }
 
         submitForm()
